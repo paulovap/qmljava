@@ -29,38 +29,21 @@ THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
 (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
 OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 */
+package org.qmljava.core;
 
-package org.qmljava;
-
-import org.antlr.v4.runtime.*;
-import org.antlr.v4.runtime.tree.ParseTree;
-import org.antlr.v4.runtime.tree.ParseTreeWalker;
-import org.qmljava.ast.ProgramNode;
-import org.qmljava.ast.ProgramNodeVisitor;
-import org.qmljava.parser.QMLLexer;
+import org.antlr.v4.runtime.ParserRuleContext;
+import org.antlr.v4.runtime.tree.ErrorNode;
+import org.antlr.v4.runtime.tree.TerminalNode;
+import org.qmljava.parser.QMLBaseListener;
+import org.qmljava.parser.QMLListener;
 import org.qmljava.parser.QMLParser;
 
-import java.io.ByteArrayInputStream;
-import java.io.IOException;
-import java.io.InputStream;
-import java.nio.charset.StandardCharsets;
+public class QMLEngine {
 
+    private QMLObject rootObject;
 
-public class Main {
-    public static void main( String[] args ){
-        try {
-            InputStream stream = new ByteArrayInputStream("import 'Qt.Controls' 0.0; Test { id: 20; d:++a Awesome {} } ".getBytes(StandardCharsets.UTF_8));
-            QMLLexer lexer = new QMLLexer(CharStreams.fromStream(stream, StandardCharsets.UTF_8));
-            CommonTokenStream tokens = new CommonTokenStream( lexer );
-            QMLParser parser = new QMLParser( tokens );
-            ParseTree tree = parser.program();
-
-            ProgramNodeVisitor programVisitor = new ProgramNodeVisitor();
-            ProgramNode node = programVisitor.visit(tree);
-            System.out.println(node.toString());
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-
+    QMLObject eval(String script) {
+        return null;
     }
+
 }

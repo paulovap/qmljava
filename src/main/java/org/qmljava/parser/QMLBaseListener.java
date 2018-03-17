@@ -30,18 +30,6 @@ public class QMLBaseListener implements QMLListener {
 	 *
 	 * <p>The default implementation does nothing.</p>
 	 */
-	@Override public void enterHeaderList(QMLParser.HeaderListContext ctx) { }
-	/**
-	 * {@inheritDoc}
-	 *
-	 * <p>The default implementation does nothing.</p>
-	 */
-	@Override public void exitHeaderList(QMLParser.HeaderListContext ctx) { }
-	/**
-	 * {@inheritDoc}
-	 *
-	 * <p>The default implementation does nothing.</p>
-	 */
 	@Override public void enterImport_(QMLParser.Import_Context ctx) { }
 	/**
 	 * {@inheritDoc}
@@ -49,6 +37,30 @@ public class QMLBaseListener implements QMLListener {
 	 * <p>The default implementation does nothing.</p>
 	 */
 	@Override public void exitImport_(QMLParser.Import_Context ctx) { }
+	/**
+	 * {@inheritDoc}
+	 *
+	 * <p>The default implementation does nothing.</p>
+	 */
+	@Override public void enterImportIdentifier(QMLParser.ImportIdentifierContext ctx) { }
+	/**
+	 * {@inheritDoc}
+	 *
+	 * <p>The default implementation does nothing.</p>
+	 */
+	@Override public void exitImportIdentifier(QMLParser.ImportIdentifierContext ctx) { }
+	/**
+	 * {@inheritDoc}
+	 *
+	 * <p>The default implementation does nothing.</p>
+	 */
+	@Override public void enterImportAlias(QMLParser.ImportAliasContext ctx) { }
+	/**
+	 * {@inheritDoc}
+	 *
+	 * <p>The default implementation does nothing.</p>
+	 */
+	@Override public void exitImportAlias(QMLParser.ImportAliasContext ctx) { }
 	/**
 	 * {@inheritDoc}
 	 *

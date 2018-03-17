@@ -30,37 +30,48 @@ THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
 OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 */
 
-package org.qmljava;
+package org.qmljava.core;
 
-import org.antlr.v4.runtime.*;
-import org.antlr.v4.runtime.tree.ParseTree;
-import org.antlr.v4.runtime.tree.ParseTreeWalker;
-import org.qmljava.ast.ProgramNode;
-import org.qmljava.ast.ProgramNodeVisitor;
-import org.qmljava.parser.QMLLexer;
-import org.qmljava.parser.QMLParser;
+import java.util.concurrent.CopyOnWriteArrayList;
+import java.util.concurrent.atomic.AtomicBoolean;
 
-import java.io.ByteArrayInputStream;
-import java.io.IOException;
-import java.io.InputStream;
-import java.nio.charset.StandardCharsets;
+public class QMLSignal {
 
+    final private CopyOnWriteArrayList<Runnable> slots = new CopyOnWriteArrayList<>();
 
-public class Main {
-    public static void main( String[] args ){
-        try {
-            InputStream stream = new ByteArrayInputStream("import 'Qt.Controls' 0.0; Test { id: 20; d:++a Awesome {} } ".getBytes(StandardCharsets.UTF_8));
-            QMLLexer lexer = new QMLLexer(CharStreams.fromStream(stream, StandardCharsets.UTF_8));
-            CommonTokenStream tokens = new CommonTokenStream( lexer );
-            QMLParser parser = new QMLParser( tokens );
-            ParseTree tree = parser.program();
+    final private AtomicBoolean enabled = new AtomicBoolean(true);
 
-            ProgramNodeVisitor programVisitor = new ProgramNodeVisitor();
-            ProgramNode node = programVisitor.visit(tree);
-            System.out.println(node.toString());
-        } catch (IOException e) {
-            e.printStackTrace();
+    /**
+     * Execute all Slots.
+     */
+    public void emit() {
+        if (!enabled.get())
+            return;
+
+        for (Runnable each : slots) {
+            each.run();
         }
+    }
 
+    /**
+     * Connect a Slot to a signal.<br/>
+     * Add a Slot to the ArrayList.
+     * @param slot the Slot to be added
+     */
+    public void connect(Runnable slot) {
+        slots.add(slot);
+    }
+
+    /**
+     * Disconnect a Slot from a signal.<br/>
+     * Remove a Slot from the ArrayList.
+     * @param slot the Slot to be removed
+     */
+    public void disconnect(Runnable slot) {
+        slots.remove(slot);
+    }
+
+    public void disconnectAll() {
+        slots.clear();
     }
 }

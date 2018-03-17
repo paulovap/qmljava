@@ -11,11 +11,13 @@ repositories {
 
 generateGrammarSource {
     outputDirectory = file("src/main/java/org/qmljava/parser")
+    arguments += ["-visitor", "-long-messages"]
 }
 
 dependencies {
     testCompile group: 'junit', name: 'junit', version: '4.11'
     antlr "org.antlr:antlr4:4.7.1"
     compile "org.antlr:antlr4-runtime:4.7"
+    compile 'com.intellij:annotations:+@jar'
 }
 

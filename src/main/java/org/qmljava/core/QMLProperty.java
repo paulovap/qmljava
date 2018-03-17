@@ -1,7 +1,7 @@
-/*
+package org.qmljava.core;/*
 BSD License
 
-Copyright (c) 2018, Paulo Pinheiro
+Copyright (c) 2018, ${user}
 All rights reserved.
 
 Redistribution and use in source and binary forms, with or without
@@ -30,37 +30,34 @@ THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
 OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 */
 
-package org.qmljava;
+import java.util.function.Function;
 
-import org.antlr.v4.runtime.*;
-import org.antlr.v4.runtime.tree.ParseTree;
-import org.antlr.v4.runtime.tree.ParseTreeWalker;
-import org.qmljava.ast.ProgramNode;
-import org.qmljava.ast.ProgramNodeVisitor;
-import org.qmljava.parser.QMLLexer;
-import org.qmljava.parser.QMLParser;
+class QMLProperty<T> {
 
-import java.io.ByteArrayInputStream;
-import java.io.IOException;
-import java.io.InputStream;
-import java.nio.charset.StandardCharsets;
+    Function<T, T> getter;
+    Function<T, T> setter;
+    private T value;
+    QMLSignal signal;
 
+    QMLProperty() {
+        this(null, null);
+    }
 
-public class Main {
-    public static void main( String[] args ){
-        try {
-            InputStream stream = new ByteArrayInputStream("import 'Qt.Controls' 0.0; Test { id: 20; d:++a Awesome {} } ".getBytes(StandardCharsets.UTF_8));
-            QMLLexer lexer = new QMLLexer(CharStreams.fromStream(stream, StandardCharsets.UTF_8));
-            CommonTokenStream tokens = new CommonTokenStream( lexer );
-            QMLParser parser = new QMLParser( tokens );
-            ParseTree tree = parser.program();
+    QMLProperty(Function<T, T> getter) {
+        this(getter, null);
+    }
 
-            ProgramNodeVisitor programVisitor = new ProgramNodeVisitor();
-            ProgramNode node = programVisitor.visit(tree);
-            System.out.println(node.toString());
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
+    QMLProperty(Function<T, T> getter, Function<T, T> setter) {
+        this.getter = getter;
+        this.setter = setter;
+        this.signal = new QMLSignal();
+    }
 
+    void set(T value) {
+            this.value = setter != null ? setter.apply(value) : value;
+    }
+
+    T get() {
+        return getter != null ? getter.apply(value) : value;
     }
 }

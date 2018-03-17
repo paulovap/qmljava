@@ -20,16 +20,6 @@ public interface QMLListener extends ParseTreeListener {
 	 */
 	void exitProgram(QMLParser.ProgramContext ctx);
 	/**
-	 * Enter a parse tree produced by {@link QMLParser#headerList}.
-	 * @param ctx the parse tree
-	 */
-	void enterHeaderList(QMLParser.HeaderListContext ctx);
-	/**
-	 * Exit a parse tree produced by {@link QMLParser#headerList}.
-	 * @param ctx the parse tree
-	 */
-	void exitHeaderList(QMLParser.HeaderListContext ctx);
-	/**
 	 * Enter a parse tree produced by {@link QMLParser#import_}.
 	 * @param ctx the parse tree
 	 */
@@ -39,6 +29,26 @@ public interface QMLListener extends ParseTreeListener {
 	 * @param ctx the parse tree
 	 */
 	void exitImport_(QMLParser.Import_Context ctx);
+	/**
+	 * Enter a parse tree produced by {@link QMLParser#importIdentifier}.
+	 * @param ctx the parse tree
+	 */
+	void enterImportIdentifier(QMLParser.ImportIdentifierContext ctx);
+	/**
+	 * Exit a parse tree produced by {@link QMLParser#importIdentifier}.
+	 * @param ctx the parse tree
+	 */
+	void exitImportIdentifier(QMLParser.ImportIdentifierContext ctx);
+	/**
+	 * Enter a parse tree produced by {@link QMLParser#importAlias}.
+	 * @param ctx the parse tree
+	 */
+	void enterImportAlias(QMLParser.ImportAliasContext ctx);
+	/**
+	 * Exit a parse tree produced by {@link QMLParser#importAlias}.
+	 * @param ctx the parse tree
+	 */
+	void exitImportAlias(QMLParser.ImportAliasContext ctx);
 	/**
 	 * Enter a parse tree produced by {@link QMLParser#rootMember}.
 	 * @param ctx the parse tree

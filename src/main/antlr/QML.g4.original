@@ -31,8 +31,8 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 */
 
 
-//based on
-// https://www.kdab.com/wp-content/uploads/stories/ast-big.png
+// This grammar try to be as close as possible to the original:
+// http://code.qt.io/cgit/qt/qtdeclarative.git/tree/src/qml/parser/qqmljs.g
 grammar QML;
 @header {
     package org.qmljava.parser;
@@ -42,22 +42,20 @@ program
     : import_* rootMember
     ;
 
+headerList
+    //: pragma
+    //| headerList pragma
+    : import_
+    | headerList import_
+    ;
+
 //pragma
 //    : PRAGMA Identifier;
 
 import_
-    : IMPORT importIdentifier NumericLiteral SEMICOLON?
-    | IMPORT importIdentifier NumericLiteral AS importAlias SEMICOLON?
-    | IMPORT importIdentifier AS JsIdentifier SEMICOLON?
-    ;
-
-importIdentifier
-    : JsIdentifier
-    | StringLiteral
-    ;
-
-importAlias
-    : JsIdentifier
+    : IMPORT memberExpression NumericLiteral SEMICOLON?
+    | IMPORT memberExpression NumericLiteral AS JsIdentifier SEMICOLON?
+    | IMPORT memberExpression AS JsIdentifier SEMICOLON?
     ;
 
 rootMember
@@ -682,7 +680,6 @@ Identifier : IdentifierStart IdentifierPart*;
 fragment IdentifierStart
     : UnicodeLetter
     | [$_]
-    | '.'
     | '\\' UnicodeEscapeSequence
     ;
 fragment IdentifierPart

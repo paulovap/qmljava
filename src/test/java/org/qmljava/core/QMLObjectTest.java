@@ -1,3 +1,14 @@
+package org.qmljava.core;
+
+import org.junit.After;
+import org.junit.Before;
+import org.junit.Test;
+
+import java.util.function.Consumer;
+import java.util.function.Supplier;
+
+import static org.junit.Assert.*;
+
 /*
 BSD License
 
@@ -29,38 +40,25 @@ THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
 (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
 OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 */
+public class QMLObjectTest {
 
-package org.qmljava;
-
-import org.antlr.v4.runtime.*;
-import org.antlr.v4.runtime.tree.ParseTree;
-import org.antlr.v4.runtime.tree.ParseTreeWalker;
-import org.qmljava.ast.ProgramNode;
-import org.qmljava.ast.ProgramNodeVisitor;
-import org.qmljava.parser.QMLLexer;
-import org.qmljava.parser.QMLParser;
-
-import java.io.ByteArrayInputStream;
-import java.io.IOException;
-import java.io.InputStream;
-import java.nio.charset.StandardCharsets;
-
-
-public class Main {
-    public static void main( String[] args ){
-        try {
-            InputStream stream = new ByteArrayInputStream("import 'Qt.Controls' 0.0; Test { id: 20; d:++a Awesome {} } ".getBytes(StandardCharsets.UTF_8));
-            QMLLexer lexer = new QMLLexer(CharStreams.fromStream(stream, StandardCharsets.UTF_8));
-            CommonTokenStream tokens = new CommonTokenStream( lexer );
-            QMLParser parser = new QMLParser( tokens );
-            ParseTree tree = parser.program();
-
-            ProgramNodeVisitor programVisitor = new ProgramNodeVisitor();
-            ProgramNode node = programVisitor.visit(tree);
-            System.out.println(node.toString());
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-
+    @Before
+    public void setUp() throws Exception {
     }
+
+    @After
+    public void tearDown() throws Exception {
+    }
+
+    @Test
+    public void createDynamicProperty() {
+        QMLObject obj = new QMLObject();
+        obj.<Integer>createDynamicProperty("myInt");
+        Runnable r = () -> assertEquals(10, (int)obj.getProperty("myInt"));
+        obj.connect("myInt", r);
+        obj.setProperty("myInt", 10);
+        obj.disconnect("myInt", r);
+        obj.setProperty("myInt", 2);
+    }
+
 }

@@ -1,4 +1,4 @@
-/*
+package org.qmljava.ast;/*
 BSD License
 
 Copyright (c) 2018, Paulo Pinheiro
@@ -30,37 +30,31 @@ THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
 OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 */
 
-package org.qmljava;
-
-import org.antlr.v4.runtime.*;
-import org.antlr.v4.runtime.tree.ParseTree;
-import org.antlr.v4.runtime.tree.ParseTreeWalker;
-import org.qmljava.ast.ProgramNode;
-import org.qmljava.ast.ProgramNodeVisitor;
-import org.qmljava.parser.QMLLexer;
+import org.antlr.v4.runtime.tree.TerminalNode;
+import org.qmljava.parser.QMLBaseVisitor;
 import org.qmljava.parser.QMLParser;
 
-import java.io.ByteArrayInputStream;
-import java.io.IOException;
-import java.io.InputStream;
-import java.nio.charset.StandardCharsets;
+public class ImportNodeVisitor extends QMLBaseVisitor<ImportNode> {
 
+    @Override
+    public ImportNode visitImport_(QMLParser.Import_Context ctx) {
 
-public class Main {
-    public static void main( String[] args ){
-        try {
-            InputStream stream = new ByteArrayInputStream("import 'Qt.Controls' 0.0; Test { id: 20; d:++a Awesome {} } ".getBytes(StandardCharsets.UTF_8));
-            QMLLexer lexer = new QMLLexer(CharStreams.fromStream(stream, StandardCharsets.UTF_8));
-            CommonTokenStream tokens = new CommonTokenStream( lexer );
-            QMLParser parser = new QMLParser( tokens );
-            ParseTree tree = parser.program();
-
-            ProgramNodeVisitor programVisitor = new ProgramNodeVisitor();
-            ProgramNode node = programVisitor.visit(tree);
-            System.out.println(node.toString());
-        } catch (IOException e) {
-            e.printStackTrace();
+        if (ctx.isEmpty()) {
+            return null;
         }
 
+        if (ctx.exception != null) {
+            throw ctx.exception;
+        }
+
+        QMLParser.ImportIdentifierContext importIdentifierContext = ctx.importIdentifier();
+        TerminalNode identifier = importIdentifierContext.JsIdentifier();
+        TerminalNode stringLiteral = importIdentifierContext.StringLiteral();
+
+        String importName = identifier != null ? identifier.getText() : stringLiteral.getText();
+        String alias = ctx.importAlias() != null ? ctx.importAlias().getText() : null;
+        double version = Double.parseDouble(ctx.NumericLiteral().toString());
+
+        return new ImportNode(importName, version, alias);
     }
 }
