@@ -1,4 +1,5 @@
-package org.qmljava.ast;/*
+package org.qmljava.ast;
+/*
 BSD License
 
 Copyright (c) 2018, ${user}
@@ -41,13 +42,14 @@ public class ProgramNodeVisitor extends QMLBaseVisitor<ProgramNode> {
     @Override
     public ProgramNode visitProgram(QMLParser.ProgramContext ctx) {
 
-        List<ImportNode> imports = new ArrayList<>();
         ImportNodeVisitor importVisitor = new ImportNodeVisitor();
+        ObjectDefinitionNodeVisitor objectVisitor = new ObjectDefinitionNodeVisitor();
+        List<ImportNode> imports = new ArrayList<>();
 
         for (QMLParser.Import_Context importCtx : ctx.import_()) {
             imports.add(importVisitor.visit(importCtx));
         }
 
-        return new ProgramNode(imports);
+        return new ProgramNode(imports, objectVisitor.visit(ctx.rootMember().objectDefinition()));
     }
 }

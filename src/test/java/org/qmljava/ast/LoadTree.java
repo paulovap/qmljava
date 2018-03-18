@@ -30,13 +30,10 @@ THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
 OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 */
 
-package org.qmljava;
+package org.qmljava.ast;
 
-import org.antlr.v4.runtime.*;
-import org.antlr.v4.runtime.tree.ParseTree;
-import org.antlr.v4.runtime.tree.ParseTreeWalker;
-import org.qmljava.ast.ProgramNode;
-import org.qmljava.ast.ProgramNodeVisitor;
+import org.antlr.v4.runtime.CharStreams;
+import org.antlr.v4.runtime.CommonTokenStream;
 import org.qmljava.parser.QMLLexer;
 import org.qmljava.parser.QMLParser;
 
@@ -45,22 +42,13 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.nio.charset.StandardCharsets;
 
+public class LoadTree {
 
-public class Main {
-    public static void main( String[] args ){
-        try {
-            InputStream stream = new ByteArrayInputStream("import 'Qt.Controls' 0.0; Test { id: 20; d:++a Awesome { Blac.k{} } } ".getBytes(StandardCharsets.UTF_8));
-            QMLLexer lexer = new QMLLexer(CharStreams.fromStream(stream, StandardCharsets.UTF_8));
-            CommonTokenStream tokens = new CommonTokenStream( lexer );
-            QMLParser parser = new QMLParser( tokens );
-            ParseTree tree = parser.program();
-
-            ProgramNodeVisitor programVisitor = new ProgramNodeVisitor();
-            ProgramNode node = programVisitor.visit(tree);
-            System.out.println(node.toString());
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-
+    public static QMLParser loadTree(String code) throws IOException {
+        InputStream stream = new ByteArrayInputStream(code.getBytes(StandardCharsets.UTF_8));
+        QMLLexer lexer = new QMLLexer(CharStreams.fromStream(stream, StandardCharsets.UTF_8));
+        CommonTokenStream tokens = new CommonTokenStream( lexer );
+        QMLParser parser = new QMLParser( tokens );
+        return parser;
     }
 }

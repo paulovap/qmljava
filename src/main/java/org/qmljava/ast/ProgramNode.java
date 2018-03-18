@@ -33,6 +33,7 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 
 import org.jetbrains.annotations.NotNull;
+import org.qmljava.parser.QMLParser;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -41,14 +42,19 @@ public class ProgramNode {
 
     final public List<ImportNode> imports = new ArrayList<>();
 
-    ProgramNode(@NotNull List<ImportNode> imports) {
+    final public ObjectDefinitionNode rootObject;
+
+    ProgramNode(@NotNull List<ImportNode> imports, @NotNull ObjectDefinitionNode rootObject) {
         this.imports.addAll(imports);
+        this.rootObject = rootObject;
     }
 
     @Override
     public String toString() {
         return "imports: " +
-                imports.toString();
+                imports.toString() +
+                "\n" +
+                "root: " + rootObject.toString();
 
     }
 }

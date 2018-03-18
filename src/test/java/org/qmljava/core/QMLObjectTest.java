@@ -4,9 +4,6 @@ import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 
-import java.util.function.Consumer;
-import java.util.function.Supplier;
-
 import static org.junit.Assert.*;
 
 /*
@@ -52,7 +49,7 @@ public class QMLObjectTest {
 
     @Test
     public void createDynamicProperty() {
-        QMLObject obj = new QMLObject();
+        QMLObjectOld obj = new QMLObjectOld();
         obj.<Integer>createDynamicProperty("myInt");
         Runnable r = () -> assertEquals(10, (int)obj.getProperty("myInt"));
         obj.connect("myInt", r);

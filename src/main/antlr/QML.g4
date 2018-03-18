@@ -64,7 +64,7 @@ rootMember
     : objectDefinition;
 
 objectDefinition
-    : qualifiedId objectInitializer;
+    : JsIdentifier objectInitializer SEMICOLON?;
 
 qualifiedId : memberExpression;
 
@@ -326,7 +326,7 @@ expression
 
 assignmentExpression
     : conditionalExpression
-    | leftHandSideExpression AssignmentOperator assignmentExpression
+    | leftHandSideExpression assignmentOperator assignmentExpression
     ;
 
 leftHandSideExpression
@@ -473,7 +473,7 @@ relationalExpression
     | relationalExpression GT shiftExpression
     | relationalExpression LE shiftExpression
     | relationalExpression GE shiftExpression
-    | relationalExpression INSTANCE_OF shiftExpression
+    | relationalExpression INSTANCEOF shiftExpression
     | relationalExpression IN shiftExpression
     ;
 
@@ -551,21 +551,6 @@ reservedIdentifier
     | WITH
     ;
 
-AssignmentOperator
-    : '='
-    | '*='
-    | '\\='
-    | '%='
-    | '+='
-    | '-='
-    | '<<='
-    | '>>='
-    | '>>>='
-    | '&='
-    | '^='
-    | '|='
-    ;
-
 ENUM : 'enum';
 PROPERTY : 'property';
 READONLY : 'readonly';
@@ -620,7 +605,6 @@ GT_GT : '>>';
 GT_GT_GT : '>>>';
 LE : '<=';
 GE : '>=';
-INSTANCE_OF : 'instanceof';
 LLEQ : '<<=';
 GGEQ : '>>=';
 GGGEQ : '>>>=';
@@ -637,7 +621,6 @@ NULL : 'null';
 TRUE : 'true';
 FALSE : 'false';
 EQ : '=';
-STAR_EQUAL : '*=';
 DIVIDE_ : '/';
 DIVIDE_EQ : '/=';
 LBRACKET : '[';
@@ -659,7 +642,6 @@ RETURN : 'return';
 IMPORT : 'import' ;
 PRAGMA : 'pragma' ;
 AS : 'as' ;
-PROPERTY_TOKEN : 'property';
 BOOL : 'bool' ;
 INT : 'int' ;
 DOUBLE : 'double' ;
@@ -682,11 +664,11 @@ Identifier : IdentifierStart IdentifierPart*;
 fragment IdentifierStart
     : UnicodeLetter
     | [$_]
-    | '.'
     | '\\' UnicodeEscapeSequence
     ;
 fragment IdentifierPart
     : IdentifierStart
+    | '.'
     | UnicodeCombiningMark
     | UnicodeDigit
     | UnicodeConnectorPunctuation

@@ -31,18 +31,11 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 */
 package org.qmljava.core;
 
-import org.antlr.v4.runtime.ParserRuleContext;
-import org.antlr.v4.runtime.tree.ErrorNode;
-import org.antlr.v4.runtime.tree.TerminalNode;
-import org.qmljava.parser.QMLBaseListener;
-import org.qmljava.parser.QMLListener;
-import org.qmljava.parser.QMLParser;
-
 public class QMLEngine {
 
-    private QMLObject rootObject;
+    private QMLObjectOld rootObject;
 
-    QMLObject eval(String script) {
+    QMLObjectOld eval(String script) {
         return null;
     }
 

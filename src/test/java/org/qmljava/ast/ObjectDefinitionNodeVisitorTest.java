@@ -1,22 +1,3 @@
-package org.qmljava.ast;
-
-import org.antlr.v4.runtime.CharStreams;
-import org.antlr.v4.runtime.CommonTokenStream;
-import org.antlr.v4.runtime.NoViableAltException;
-import org.antlr.v4.runtime.tree.ParseTree;
-import org.junit.After;
-import org.junit.Before;
-import org.junit.Test;
-import org.qmljava.parser.QMLLexer;
-import org.qmljava.parser.QMLParser;
-
-import java.io.ByteArrayInputStream;
-import java.io.IOException;
-import java.io.InputStream;
-import java.nio.charset.StandardCharsets;
-
-import static org.junit.Assert.*;
-
 /*
 BSD License
 
@@ -48,46 +29,59 @@ THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
 (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
 OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 */
-public class ImportNodeVisitorTest {
 
+package org.qmljava.ast;
+
+import org.antlr.v4.runtime.NoViableAltException;
+import org.antlr.v4.runtime.tree.ParseTree;
+import org.junit.Test;
+
+import java.io.IOException;
+import java.util.Arrays;
+import java.util.Collections;
+
+import static org.junit.Assert.*;
+
+
+public class ObjectDefinitionNodeVisitorTest {
 
     final String[] acceptables =  new String[] {
-            "import QtQuick 1.0",
-            "import 'http://www.google.com' 0.2",
-            "import QtQuick.Controls 2.3 as Controls",
+            "T {}",
+            "MyItem { Rectangle{}; Cube{} }",
     };
 
-    final String[] errorImport = new String[] {
-            "import 3 1.0",
-            "import QtQuick;",
-            "import QtQuick T.T as Good",
-            "import QtQuick 1.1 as 10"
+    final String[] errors = new String[] {
+            "10 { }",
+            "MyItem {",
+            "Re{}c",
     };
 
-    final ImportNode[] acceptableResults = new ImportNode[] {
-            new ImportNode("QtQuick", 1.0, null),
-            new ImportNode("'http://www.google.com'", 0.2, null),
-            new ImportNode("QtQuick.Controls", 2.3, "Controls")
+    final ObjectDefinitionNode[] acceptableResults = new ObjectDefinitionNode[] {
+            new ObjectDefinitionNode("T", Collections.emptyList()),
+            new ObjectDefinitionNode("MyItem", Arrays.asList(
+                   new ObjectDefinitionNode("Rectangle", Collections.emptyList()),
+                  new ObjectDefinitionNode("Cube", Collections.emptyList()))
+            )
     };
 
     @Test
-    public void testValidImportVisitor() throws IOException {
+    public void validObjects() throws IOException {
         for (int i=0; i < acceptables.length; i++) {
-            ParseTree tree = LoadTree.loadTree(acceptables[i]).import_();
-            ImportNodeVisitor importVisitor = new ImportNodeVisitor();
-            ImportNode import_ = importVisitor.visit(tree);
-            assertEquals(acceptableResults[i], import_);
+            ParseTree tree = LoadTree.loadTree(acceptables[i]).objectDefinition();
+            ObjectDefinitionNodeVisitor objectVisitor = new ObjectDefinitionNodeVisitor();
+            ObjectDefinitionNode obj = objectVisitor.visit(tree);
+            assertEquals(acceptableResults[i], obj);
         }
     }
 
     @Test
-    public void testInValidImportVisitor() throws IOException {
-        for (String code : errorImport) {
+    public void inValidObjects() throws IOException {
+        for (String code : errors) {
             ParseTree tree = LoadTree.loadTree(code).import_();
-            ImportNodeVisitor importVisitor = new ImportNodeVisitor();
+            ObjectDefinitionNodeVisitor visitor = new ObjectDefinitionNodeVisitor();
             try {
-                ImportNode import_ = importVisitor.visit(tree);
-                assertNull("This assert should never been reached because visitor should throw exception" , import_);
+                ObjectDefinitionNode object = visitor.visit(tree);
+                assertNull("This assert should never been reached because visitor should throw exception" , object);
             } catch (NoViableAltException ignored) {
             }
         }

@@ -59,11 +59,11 @@ class ImportNode {
 
     @Override
     public boolean equals(Object obj) {
-        return obj != null &&
-                obj instanceof ImportNode &&
-                Objects.equals(this.identifier, ((ImportNode) obj).identifier) &&
-                this.version == ((ImportNode) obj).version &&
-                Objects.equals(this.alias, ((ImportNode) obj).alias);
+        return obj == this &&
+               obj instanceof ImportNode &&
+               Objects.equals(this.identifier, ((ImportNode) obj).identifier) &&
+               Objects.equals(this.version , ((ImportNode) obj).version) &&
+               Objects.equals(this.alias, ((ImportNode) obj).alias);
     }
 
     @Override

@@ -1,4 +1,5 @@
-package org.qmljava.ast;/*
+package org.qmljava.ast;
+/*
 BSD License
 
 Copyright (c) 2018, Paulo Pinheiro
