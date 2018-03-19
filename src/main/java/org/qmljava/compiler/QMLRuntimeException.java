@@ -1,7 +1,8 @@
-package org.qmljava.core;/*
+package org.qmljava.compiler;
+/*
 BSD License
 
-Copyright (c) 2018, ${user}
+Copyright (c) 2018, Paulo Pinheiro
 All rights reserved.
 
 Redistribution and use in source and binary forms, with or without
@@ -30,49 +31,12 @@ THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
 OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 */
 
-import java.util.concurrent.ConcurrentHashMap;
+public class QMLRuntimeException extends RuntimeException {
 
-public class QMLObjectOld {
-
-    private ConcurrentHashMap<String, QMLProperty> dynamicProp = new ConcurrentHashMap<>();
-
-    public <T> void createDynamicProperty(String propertyName) {
-        assert (propertyName != null);
-
-        if (dynamicProp.containsKey(propertyName)) {
-            throw new RuntimeException("Property " + propertyName + " already created");
-        }
-
-        dynamicProp.put(propertyName, new QMLProperty<T>());
+    QMLRuntimeException(String format, Object... args) {
+        super(String.format(format, args));
     }
-
-    public void destroyDynamicProperty(String propertyName) {
-        QMLProperty prop = dynamicProp.remove(propertyName);
-        prop.signal.disconnectAll();
-    }
-
-    public <T> T getProperty(String propertyName) {
-
-        return (T) dynamicProp.get(propertyName).get();
-    }
-
-    public <T> void setProperty(String propertyName, T value) {
-        QMLProperty prop = dynamicProp.get(propertyName);
-        T oldVal = (T) prop.get();
-        if (!value.equals(oldVal)) {
-            // @TODO: emit
-            prop.set(value);
-            prop.signal.emit();
-        }
-    }
-
-    public void connect(String propertyName, Runnable slot) {
-        QMLProperty p  = dynamicProp.get(propertyName);
-        p.signal.connect(slot);
-    }
-
-    public void disconnect(String propertyName, Runnable slot) {
-        QMLProperty p  = dynamicProp.get(propertyName);
-        p.signal.disconnect(slot);
+    QMLRuntimeException(Throwable cause, String format, Object... args) {
+        super(String.format(format, args), cause);
     }
 }

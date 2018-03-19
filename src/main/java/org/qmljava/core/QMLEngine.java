@@ -33,10 +33,5 @@ package org.qmljava.core;
 
 public class QMLEngine {
 
-    private QMLObjectOld rootObject;
-
-    QMLObjectOld eval(String script) {
-        return null;
-    }
 
 }

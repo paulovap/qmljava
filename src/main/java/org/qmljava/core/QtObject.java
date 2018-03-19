@@ -1,5 +1,4 @@
-package org.qmljava.core;
-/*
+package org.qmljava.core;/*
 BSD License
 
 Copyright (c) 2018, Paulo Pinheiro
@@ -31,10 +30,26 @@ THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
 OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 */
 
-public interface QMLObject {
+import java.util.LinkedHashMap;
 
-    MetaClass getMetaClass();
+public class QtObject implements QMLObject {
 
-    int getId();
-    void addChildren(int id, QMLObject child);
+    private int id = Integer.MAX_VALUE;
+
+    private LinkedHashMap<Integer, Object> children = new LinkedHashMap<>();
+
+    @Override
+    public MetaClass getMetaClass() {
+        return new MetaClass(QtObject.class, "QtObject");
+    }
+
+    @Override
+    public int getId() {
+        return id;
+    }
+
+    @Override
+    public void addChildren(int id, QMLObject child) {
+        children.put(id, child);
+    }
 }

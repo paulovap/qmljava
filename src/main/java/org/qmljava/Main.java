@@ -32,35 +32,20 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 package org.qmljava;
 
-import org.antlr.v4.runtime.*;
-import org.antlr.v4.runtime.tree.ParseTree;
-import org.antlr.v4.runtime.tree.ParseTreeWalker;
-import org.qmljava.ast.ProgramNode;
-import org.qmljava.ast.ProgramNodeVisitor;
-import org.qmljava.parser.QMLLexer;
-import org.qmljava.parser.QMLParser;
-
-import java.io.ByteArrayInputStream;
-import java.io.IOException;
-import java.io.InputStream;
-import java.nio.charset.StandardCharsets;
+import org.qmljava.compiler.QMLCompiler;
+import org.qmljava.core.MetaClass;
+import org.qmljava.core.QMLObject;
+import org.qmljava.core.QtObject;
+import java.util.HashMap;
+import java.util.Map;
 
 
 public class Main {
     public static void main( String[] args ){
-        try {
-            InputStream stream = new ByteArrayInputStream("import 'Qt.Controls' 0.0; Test { id: 20; d:++a Awesome { Blac.k{} } } ".getBytes(StandardCharsets.UTF_8));
-            QMLLexer lexer = new QMLLexer(CharStreams.fromStream(stream, StandardCharsets.UTF_8));
-            CommonTokenStream tokens = new CommonTokenStream( lexer );
-            QMLParser parser = new QMLParser( tokens );
-            ParseTree tree = parser.program();
-
-            ProgramNodeVisitor programVisitor = new ProgramNodeVisitor();
-            ProgramNode node = programVisitor.visit(tree);
-            System.out.println(node.toString());
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-
+        Map<String, MetaClass> classes = new HashMap<>();
+        classes.put("QtObject", new QtObject().getMetaClass());
+        QMLCompiler compiler = new QMLCompiler(classes);
+        QMLObject root = compiler.compile("import 'Qt.Controls' 0.0; QtObject { id: 20; d:++a QtObject { QtObject{} } } ");
+        System.out.println(root);
     }
 }

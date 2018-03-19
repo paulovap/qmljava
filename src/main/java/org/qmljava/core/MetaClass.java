@@ -31,10 +31,25 @@ THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
 OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 */
 
-public interface QMLObject {
 
-    MetaClass getMetaClass();
+import org.jetbrains.annotations.NotNull;
 
-    int getId();
-    void addChildren(int id, QMLObject child);
+public class MetaClass {
+
+    private String qmlType;
+    private Class javaClass;
+
+    MetaClass(@NotNull Class javaClass, @NotNull String qmlType) {
+        this.javaClass = javaClass;
+        this.qmlType = qmlType;
+    }
+
+    public String getQmlType() {
+        return qmlType;
+    }
+
+    public Class getJavaClass() {
+        return javaClass;
+    }
+
 }

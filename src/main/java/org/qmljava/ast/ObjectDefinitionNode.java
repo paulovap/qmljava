@@ -40,6 +40,8 @@ import java.util.Objects;
 public class ObjectDefinitionNode {
 
     final public String type;
+    //@TODO: add id
+    final public String id = "";
     final public List<ObjectDefinitionNode> children = new ArrayList<>();
 
     ObjectDefinitionNode(@NotNull String type, @Nullable List<ObjectDefinitionNode> children) {
