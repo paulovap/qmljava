@@ -1,3 +1,4 @@
+package org.qmljava.ast;
 /*
 BSD License
 
@@ -30,22 +31,42 @@ THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
 OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 */
 
-package org.qmljava;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
-import org.qmljava.compiler.QMLCompiler;
-import org.qmljava.core.MetaClass;
-import org.qmljava.core.QMLObject;
-import org.qmljava.core.QtObject;
-import java.util.HashMap;
-import java.util.Map;
+public class PropertyNode {
+    @NotNull
+    final private String type;
+    @NotNull
+    final private String name;
 
+    @Nullable
+    final private ObjectDefinitionNode objectDefinition;
 
-public class Main {
-    public static void main( String[] args ){
-        Map<String, MetaClass> classes = new HashMap<>();
-        classes.put("QtObject", new QtObject().getMetaClass());
-        QMLCompiler compiler = new QMLCompiler(classes);
-        QMLObject root = compiler.compile("import 'Qt.Controls' 0.0; QtObject { property QtObject myProp : QtObject { QtObject{} } } ");
-        System.out.println();
+    //TODO: add bindingExpression
+
+    PropertyNode(@NotNull String type, @NotNull String name) {
+        this(type, name, null);
+    }
+
+    PropertyNode(@NotNull String type, @NotNull String name, @Nullable ObjectDefinitionNode objectNode) {
+        this.type = type;
+        this.name = name;
+        objectDefinition = objectNode;
+    }
+
+    @NotNull
+    public String getType() {
+        return type;
+    }
+
+    @NotNull
+    public String getName() {
+        return name;
+    }
+
+    @Nullable
+    public ObjectDefinitionNode getObjectDefinition() {
+        return objectDefinition;
     }
 }

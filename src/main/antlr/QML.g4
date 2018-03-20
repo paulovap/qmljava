@@ -80,19 +80,24 @@ objectMember
     | qualifiedId ON qualifiedId objectInitializer
     | SIGNAL Identifier LPAREN parameterList* RPAREN SEMICOLON?
     | SIGNAL Identifier SEMICOLON?
-    | PROPERTY propertyType JsIdentifier SEMICOLON?
-    | DEFAULT PROPERTY propertyType JsIdentifier SEMICOLON?
     | DEFAULT PROPERTY Identifier LT propertyType GT JsIdentifier SEMICOLON?
     | PROPERTY Identifier LT propertyType GT JsIdentifier SEMICOLON?
     | PROPERTY Identifier LT propertyType GT JsIdentifier COLON LBRACKET arrayMemberList RBRACKET
 //    | ENUM IDENTIFIER LBRACE EnumMemberList RBRACE
-    | PROPERTY propertyType JsIdentifier COLON scriptStatement
-    | READONLY PROPERTY propertyType JsIdentifier COLON scriptStatement
-    | DEFAULT PROPERTY propertyType JsIdentifier COLON scriptStatement
-    | PROPERTY propertyType JsIdentifier COLON qualifiedId objectInitializer
-    | READONLY PROPERTY propertyType JsIdentifier COLON qualifiedId objectInitializer
+    | READONLY? PROPERTY propertyType JsIdentifier COLON scriptStatement
+    | DEFAULT? PROPERTY propertyType JsIdentifier COLON scriptStatement
+    | propertyDeclarationAndAssignObjectDefinition
+    | propertyDeclaration
     | functionDeclaration
     | variableStatement
+    ;
+
+propertyDeclaration
+    : DEFAULT? PROPERTY propertyType JsIdentifier SEMICOLON?
+    ;
+
+propertyDeclarationAndAssignObjectDefinition
+    : READONLY? PROPERTY propertyType JsIdentifier COLON objectDefinition
     ;
 
 parameterList
@@ -101,10 +106,8 @@ parameterList
     ;
 
 propertyType
-    : VAR
-    //| RESERVED_WORD TODO: figure out this
-    | Identifier //TODO: also thise
-    | propertyType DOT Identifier
+    : JsIdentifier //TODO: also thise
+//    | propertyType DOT Identifier
     ;
 arrayMemberList
     : objectDefinition
@@ -642,22 +645,15 @@ RETURN : 'return';
 IMPORT : 'import' ;
 PRAGMA : 'pragma' ;
 AS : 'as' ;
-BOOL : 'bool' ;
-INT : 'int' ;
-DOUBLE : 'double' ;
-REAL : 'real' ;
-LIST : 'list' ;
-STRING : 'string' ;
-URL : 'url' ;
 
 JsIdentifier
-    : Identifier
-    | PROPERTY
+    : PROPERTY
     | SIGNAL
     | READONLY
     | ON
     | GET
     | SET
+    | Identifier
     ;
 
 Identifier : IdentifierStart IdentifierPart*;

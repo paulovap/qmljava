@@ -30,34 +30,47 @@ THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
 OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 */
 
-import java.util.function.Function;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
-class QMLProperty<T> {
+import java.util.Objects;
 
-    Function<T, T> getter;
-    Function<T, T> setter;
-    private T value;
-    QMLSignal signal;
+public class QMLProperty {
 
-    QMLProperty() {
-        this(null, null);
-    }
+    private String name;
+    private Class clazz;
+    private Object value;
+    private QMLSignal signal;
 
-    QMLProperty(Function<T, T> getter) {
-        this(getter, null);
-    }
-
-    QMLProperty(Function<T, T> getter, Function<T, T> setter) {
-        this.getter = getter;
-        this.setter = setter;
+    public QMLProperty(@NotNull String name,
+                @NotNull Class clazz,
+                @Nullable Object initialValue) {
+        this.name = name;
+        this.clazz = clazz;
         this.signal = new QMLSignal();
+        this.value = initialValue;
     }
 
-    void set(T value) {
-            this.value = setter != null ? setter.apply(value) : value;
+    String getName() {
+        return name;
     }
 
-    T get() {
-        return getter != null ? getter.apply(value) : value;
+    Class getClazz() {
+        return clazz;
+    }
+
+    void set(Object value) {
+        if (!Objects.equals(this.value, value)) {
+            this.value = value;
+            signal.emit();
+        }
+    }
+
+    Object get() {
+        return value;
+    }
+
+    QMLSignal getSignal () {
+        return signal;
     }
 }

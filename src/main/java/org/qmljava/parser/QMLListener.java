@@ -100,6 +100,26 @@ public interface QMLListener extends ParseTreeListener {
 	 */
 	void exitObjectMember(QMLParser.ObjectMemberContext ctx);
 	/**
+	 * Enter a parse tree produced by {@link QMLParser#propertyDeclaration}.
+	 * @param ctx the parse tree
+	 */
+	void enterPropertyDeclaration(QMLParser.PropertyDeclarationContext ctx);
+	/**
+	 * Exit a parse tree produced by {@link QMLParser#propertyDeclaration}.
+	 * @param ctx the parse tree
+	 */
+	void exitPropertyDeclaration(QMLParser.PropertyDeclarationContext ctx);
+	/**
+	 * Enter a parse tree produced by {@link QMLParser#propertyDeclarationAndAssignObjectDefinition}.
+	 * @param ctx the parse tree
+	 */
+	void enterPropertyDeclarationAndAssignObjectDefinition(QMLParser.PropertyDeclarationAndAssignObjectDefinitionContext ctx);
+	/**
+	 * Exit a parse tree produced by {@link QMLParser#propertyDeclarationAndAssignObjectDefinition}.
+	 * @param ctx the parse tree
+	 */
+	void exitPropertyDeclarationAndAssignObjectDefinition(QMLParser.PropertyDeclarationAndAssignObjectDefinitionContext ctx);
+	/**
 	 * Enter a parse tree produced by {@link QMLParser#parameterList}.
 	 * @param ctx the parse tree
 	 */

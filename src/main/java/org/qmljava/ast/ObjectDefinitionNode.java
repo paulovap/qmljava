@@ -43,11 +43,16 @@ public class ObjectDefinitionNode {
     //@TODO: add id
     final public String id = "";
     final public List<ObjectDefinitionNode> children = new ArrayList<>();
+    final public List<PropertyNode> declaredProperties = new ArrayList<>();
 
-    ObjectDefinitionNode(@NotNull String type, @Nullable List<ObjectDefinitionNode> children) {
+    ObjectDefinitionNode(@NotNull String type, @Nullable List<ObjectDefinitionNode> children, @Nullable List<PropertyNode> declaredProperties) {
         this.type = type;
         if (children != null) {
            this.children.addAll(children);
+        }
+
+        if (declaredProperties != null) {
+            this.declaredProperties.addAll(declaredProperties);
         }
     }
 
@@ -57,6 +62,8 @@ public class ObjectDefinitionNode {
                 "    type: " + type +
                 "\n" +
                 "    children: " + children.toString() +
+                "\n" +
+                "    properties: " + declaredProperties.toString() +
                 ")";
     }
 
@@ -65,7 +72,8 @@ public class ObjectDefinitionNode {
         return obj == this ||
                 obj instanceof ObjectDefinitionNode &&
                         Objects.equals(this.type, ((ObjectDefinitionNode) obj).type) &&
-                        Objects.equals(this.children, ((ObjectDefinitionNode) obj).children);
+                        Objects.equals(this.children, ((ObjectDefinitionNode) obj).children) &&
+                        Objects.equals(this.declaredProperties, ((ObjectDefinitionNode) obj).declaredProperties);
 
     }
 }

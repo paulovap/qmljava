@@ -34,13 +34,14 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 import org.antlr.v4.runtime.CharStreams;
 import org.antlr.v4.runtime.CommonTokenStream;
 import org.antlr.v4.runtime.tree.ParseTree;
-import org.jetbrains.annotations.NonNls;
 import org.jetbrains.annotations.NotNull;
 import org.qmljava.ast.ObjectDefinitionNode;
 import org.qmljava.ast.ProgramNode;
 import org.qmljava.ast.ProgramNodeVisitor;
+import org.qmljava.ast.PropertyNode;
 import org.qmljava.core.MetaClass;
 import org.qmljava.core.QMLObject;
+import org.qmljava.core.QMLProperty;
 import org.qmljava.parser.QMLLexer;
 import org.qmljava.parser.QMLParser;
 
@@ -49,6 +50,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.nio.charset.StandardCharsets;
 import java.util.Map;
+import java.util.function.Function;
 
 public class QMLCompiler {
 
@@ -64,7 +66,7 @@ public class QMLCompiler {
         return createQMLObject(loadAst(unit).rootObject);
     }
 
-    public QMLObject createQMLObject(@NotNull ObjectDefinitionNode objectNode) {
+    private QMLObject createQMLObject(@NotNull ObjectDefinitionNode objectNode) {
         MetaClass meta = availableTypes.get(objectNode.type);
 
         if (meta == null) {
@@ -74,10 +76,18 @@ public class QMLCompiler {
 
         try {
             QMLObject object = (QMLObject) meta.getJavaClass().newInstance();
+
+            // add children
             for (ObjectDefinitionNode childNode : objectNode.children) {
                 QMLObject child = createQMLObject(childNode);
                 object.addChildren(child.getId(), child);
             }
+
+            // add new properties
+            for (PropertyNode propNode : objectNode.declaredProperties) {
+                object.addDynamicProperty(createProperty(propNode));
+            }
+
             return object;
         } catch (InstantiationException e) {
             throw new QMLRuntimeException(e, "%s unable to be instantiated",
@@ -92,7 +102,14 @@ public class QMLCompiler {
         }
     }
 
-    public ProgramNode loadAst(String unit) {
+    private QMLProperty createProperty(@NotNull PropertyNode propertyNode) {
+        Class clazz = castQMLType(propertyNode.getType());
+        ObjectDefinitionNode objDefinition = propertyNode.getObjectDefinition();
+        QMLObject obj = objDefinition != null ? createQMLObject(objDefinition): null;
+        return new QMLProperty(propertyNode.getName(), clazz, obj);
+    }
+
+    private ProgramNode loadAst(String unit) {
         try {
             InputStream stream = new ByteArrayInputStream(unit.getBytes(StandardCharsets.UTF_8));
             QMLLexer lexer = new QMLLexer(CharStreams.fromStream(stream, StandardCharsets.UTF_8));
@@ -106,5 +123,22 @@ public class QMLCompiler {
             e.printStackTrace();
             throw new QMLRuntimeException(e, "unable to load unit");
         }
+    }
+
+    private Class castQMLType(@NotNull String type) {
+        switch (type) {
+            case "int": return Integer.class;
+            case "double":
+            case "real": return Double.class;
+            case "string": return String.class;
+            case "var" : return Object.class;
+            case "bool": return Boolean.class;
+        }
+
+        MetaClass meta = availableTypes.get(type);
+        if (meta == null) {
+            throw new QMLRuntimeException("type %s is not defined", type);
+        }
+        return meta.getJavaClass();
     }
 }

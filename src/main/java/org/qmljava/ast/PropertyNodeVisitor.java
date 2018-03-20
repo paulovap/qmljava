@@ -1,3 +1,4 @@
+package org.qmljava.ast;
 /*
 BSD License
 
@@ -30,22 +31,23 @@ THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
 OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 */
 
-package org.qmljava;
+import org.qmljava.parser.QMLBaseVisitor;
+import org.qmljava.parser.QMLParser;
 
-import org.qmljava.compiler.QMLCompiler;
-import org.qmljava.core.MetaClass;
-import org.qmljava.core.QMLObject;
-import org.qmljava.core.QtObject;
-import java.util.HashMap;
-import java.util.Map;
+public class PropertyNodeVisitor extends QMLBaseVisitor<PropertyNode> {
 
+    @Override
+    public PropertyNode visitPropertyDeclaration(QMLParser.PropertyDeclarationContext ctx) {
+        return new PropertyNode(
+                ctx.propertyType().getText(),
+                ctx.JsIdentifier().getText());
+    }
 
-public class Main {
-    public static void main( String[] args ){
-        Map<String, MetaClass> classes = new HashMap<>();
-        classes.put("QtObject", new QtObject().getMetaClass());
-        QMLCompiler compiler = new QMLCompiler(classes);
-        QMLObject root = compiler.compile("import 'Qt.Controls' 0.0; QtObject { property QtObject myProp : QtObject { QtObject{} } } ");
-        System.out.println();
+    @Override
+    public PropertyNode visitPropertyDeclarationAndAssignObjectDefinition(QMLParser.PropertyDeclarationAndAssignObjectDefinitionContext ctx) {
+        return new PropertyNode(
+                ctx.propertyType().getText(),
+                ctx.JsIdentifier().getText(),
+                new ObjectDefinitionNodeVisitor().visit(ctx.objectDefinition()));
     }
 }

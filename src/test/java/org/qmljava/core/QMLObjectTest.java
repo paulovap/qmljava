@@ -49,13 +49,6 @@ public class QMLObjectTest {
 
     @Test
     public void createDynamicProperty() {
-        QMLObjectOld obj = new QMLObjectOld();
-        obj.<Integer>createDynamicProperty("myInt");
-        Runnable r = () -> assertEquals(10, (int)obj.getProperty("myInt"));
-        obj.connect("myInt", r);
-        obj.setProperty("myInt", 10);
-        obj.disconnect("myInt", r);
-        obj.setProperty("myInt", 2);
     }
 
 }

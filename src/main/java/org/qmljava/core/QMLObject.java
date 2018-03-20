@@ -37,4 +37,5 @@ public interface QMLObject {
 
     int getId();
     void addChildren(int id, QMLObject child);
+    void addDynamicProperty(QMLProperty property);
 }

@@ -67,6 +67,18 @@ public interface QMLVisitor<T> extends ParseTreeVisitor<T> {
 	 */
 	T visitObjectMember(QMLParser.ObjectMemberContext ctx);
 	/**
+	 * Visit a parse tree produced by {@link QMLParser#propertyDeclaration}.
+	 * @param ctx the parse tree
+	 * @return the visitor result
+	 */
+	T visitPropertyDeclaration(QMLParser.PropertyDeclarationContext ctx);
+	/**
+	 * Visit a parse tree produced by {@link QMLParser#propertyDeclarationAndAssignObjectDefinition}.
+	 * @param ctx the parse tree
+	 * @return the visitor result
+	 */
+	T visitPropertyDeclarationAndAssignObjectDefinition(QMLParser.PropertyDeclarationAndAssignObjectDefinitionContext ctx);
+	/**
 	 * Visit a parse tree produced by {@link QMLParser#parameterList}.
 	 * @param ctx the parse tree
 	 * @return the visitor result

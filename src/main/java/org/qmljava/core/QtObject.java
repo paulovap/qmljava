@@ -37,6 +37,7 @@ public class QtObject implements QMLObject {
     private int id = Integer.MAX_VALUE;
 
     private LinkedHashMap<Integer, Object> children = new LinkedHashMap<>();
+    private LinkedHashMap<String, QMLProperty> declaredProperties = new LinkedHashMap<>();
 
     @Override
     public MetaClass getMetaClass() {
@@ -51,5 +52,10 @@ public class QtObject implements QMLObject {
     @Override
     public void addChildren(int id, QMLObject child) {
         children.put(id, child);
+    }
+
+    @Override
+    public void addDynamicProperty(QMLProperty property) {
+        declaredProperties.put(property.getName(), property);
     }
 }

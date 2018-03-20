@@ -41,12 +41,30 @@ public class ObjectDefinitionNodeVisitor extends QMLBaseVisitor<ObjectDefinition
     @Override
     public ObjectDefinitionNode visitObjectDefinition(QMLParser.ObjectDefinitionContext ctx) {
         String type = ctx.JsIdentifier().getText();
+
         List<ObjectDefinitionNode> children = new ArrayList<>();
+        List<PropertyNode> declaredProperties = new ArrayList<>();
+
+        PropertyNodeVisitor propertyVisitor = new PropertyNodeVisitor();
+
         for (QMLParser.ObjectMemberContext memberCtx : ctx.objectInitializer().objectMember()) {
+
+            /* children parsing */
             if (memberCtx.objectDefinition() != null) {
                 children.add(this.visit(memberCtx.objectDefinition()));
             }
+
+            /* declared properties parsing */
+            if (memberCtx.propertyDeclaration() != null) {
+                declaredProperties.add(propertyVisitor.visit(memberCtx.propertyDeclaration()));
+            }
+
+            /* declared properties with object assignment parsing */
+            if (memberCtx.propertyDeclarationAndAssignObjectDefinition() != null) {
+                declaredProperties.add(propertyVisitor.visit(memberCtx.propertyDeclarationAndAssignObjectDefinition()));
+            }
         }
-        return new ObjectDefinitionNode(type, children);
+
+        return new ObjectDefinitionNode(type, children, declaredProperties);
     }
 }
