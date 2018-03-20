@@ -1,11 +1,12 @@
 # qmljava
 QML Engine written in pure java
 
-##Status
+## Status
+
 Work In Progress. 
 
 - [x] Create Grammar
 - [x] Create Parser
-- [] Create Basic Runtime
-- [] Create Visual Elements (Android)
+- [ ] Create Basic Runtime
+- [ ] Create Visual Elements (Android)
 
